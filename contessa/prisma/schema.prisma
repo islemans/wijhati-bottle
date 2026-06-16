@@ -1,0 +1,188 @@
+// Contessa — Luxury E-Commerce Platform
+// Prisma Schema v1
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Products ────────────────────────────────────────────────────────────────
+
+model Product {
+  id           String          @id @default(cuid())
+  name         String
+  slug         String          @unique
+  description  String?
+  price        Decimal         @db.Decimal(10, 2)
+  comparePrice Decimal?        @db.Decimal(10, 2)
+  category     ProductCategory
+  // Makeup: { ingredients: [...] }  Fashion: { composition: "80% silk", care: [...] }
+  metadata     Json?
+  images       ProductImage[]
+  variants     ProductVariant[]
+  orderItems   OrderItem[]
+  wishlistItems WishlistItem[]
+  bundleItems  BundleItem[]
+  isPublished  Boolean         @default(false)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([slug])
+  @@index([category])
+  @@index([isPublished])
+}
+
+enum ProductCategory {
+  MAKEUP
+  SKINCARE
+  FRAGRANCE
+  FASHION
+  ACCESSORIES
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  url       String
+  alt       String?
+  position  Int     @default(0)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
+  @@index([productId])
+}
+
+model ProductVariant {
+  id        String      @id @default(cuid())
+  product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  label     String      // "Shade: Petal Blush"
+  type      VariantType
+  value     String      // hex code, "XS", "Matte", etc.
+  stock     Int         @default(0)
+  sku       String?     @unique
+  priceOverride Decimal? @db.Decimal(10, 2)
+
+  @@index([productId])
+}
+
+enum VariantType {
+  SHADE
+  SIZE
+  FINISH
+}
+
+// ─── Customers & Wishlist ─────────────────────────────────────────────────────
+
+model Customer {
+  id        String         @id @default(cuid())
+  email     String         @unique
+  firstName String
+  lastName  String
+  phone     String?
+  orders    Order[]
+  wishlist  WishlistItem[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  String
+  createdAt  DateTime @default(now())
+
+  @@unique([customerId, productId])
+  @@index([customerId])
+}
+
+// ─── Orders ───────────────────────────────────────────────────────────────────
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique @default(cuid())
+  status          OrderStatus @default(PENDING)
+  customer        Customer    @relation(fields: [customerId], references: [id])
+  customerId      String
+  items           OrderItem[]
+  subtotal        Decimal     @db.Decimal(10, 2)
+  tax             Decimal     @db.Decimal(10, 2)
+  shipping        Decimal     @db.Decimal(10, 2) @default(0)
+  total           Decimal     @db.Decimal(10, 2)
+  shippingAddress Json        // { line1, city, country, zip, ... }
+  paymentMethod   String?     // "apple_pay" | "card" | "stripe_link"
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  variantId String?
+  quantity  Int
+  unitPrice Decimal @db.Decimal(10, 2)
+  total     Decimal @db.Decimal(10, 2)
+
+  @@index([orderId])
+}
+
+// ─── Editorial Bundles ("Complete the Look") ─────────────────────────────────
+
+model Bundle {
+  id             String       @id @default(cuid())
+  title          String
+  slug           String       @unique
+  editorialImage String       // full-bleed editorial photo URL
+  description    String?
+  items          BundleItem[]
+  isActive       Boolean      @default(true)
+  sortOrder      Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model BundleItem {
+  id        String  @id @default(cuid())
+  bundle    Bundle  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  bundleId  String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  position  Int     @default(0)
+}
+
+// ─── Theme Engine ─────────────────────────────────────────────────────────────
+
+model ThemeSettings {
+  id        String   @id @default(cuid())
+  name      String   @default("default")
+  isActive  Boolean  @default(false)
+  // Full theme config — see lib/theme.ts for the ThemeConfig type
+  config    Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+}

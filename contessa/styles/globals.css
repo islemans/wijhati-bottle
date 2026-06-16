@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  All brand tokens come from --brand-* CSS variables injected by the
+  Theme Engine in app/(storefront)/layout.tsx. These rules are thin
+  wrappers that ensure consistent type rendering and scrollbar styling.
+*/
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--brand-background);
+    color: var(--brand-foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  ::selection {
+    background-color: var(--brand-primary);
+    color: white;
+  }
+
+  /* Feather-light scrollbar — keeps the luxe feel */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--brand-border);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--brand-muted); }
+}
+
+@layer components {
+  /* Utility class for any section title using the editorial serif */
+  .heading-serif {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+  }
+
+  /* Subtle glass panel used for cards, dropdowns, modals */
+  .glass-panel {
+    background: rgba(253, 250, 247, 0.82);
+    backdrop-filter: blur(20px) saturate(1.6);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6);
+    border: 1px solid rgba(201, 136, 138, 0.12);
+  }
+}

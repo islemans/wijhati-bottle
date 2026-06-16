@@ -1,0 +1,306 @@
+@import "tailwindcss";
+
+/* ── Design Tokens ── */
+@theme {
+  --color-forest: #1A3626;
+  --color-forest-light: #2A5640;
+  --color-forest-dark: #0F1F17;
+  --color-sand: #C2A878;
+  --color-sand-light: #D4BE96;
+  --color-sand-dark: #9E8A62;
+  --color-cream: #F5F4F0;
+  --color-cream-dark: #E8E6E0;
+  --color-slate: #1a1a1f;
+  --color-slate-light: #2a2a30;
+  --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-family-serif: 'Playfair Display', ui-serif, Georgia, serif;
+}
+
+/* ── Base Reset ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  background: var(--color-cream);
+  color: var(--color-forest);
+  overflow-x: hidden;
+}
+
+/* ── Grain Overlay ── */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+/* ── Glassmorphism Cards ── */
+.glass-card {
+  background: rgba(245, 244, 240, 0.12);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(194, 168, 120, 0.15);
+  border-radius: 16px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.glass-card-dark {
+  background: rgba(26, 54, 38, 0.65);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  border: 1px solid rgba(194, 168, 120, 0.2);
+  border-radius: 16px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  color: var(--color-cream);
+}
+
+/* ── Neumorphism Buttons ── */
+.neu-btn {
+  background: var(--color-cream);
+  border: none;
+  border-radius: 14px;
+  padding: 14px 32px;
+  font-family: var(--font-family-sans);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  color: var(--color-forest);
+  cursor: pointer;
+  box-shadow:
+    6px 6px 14px rgba(0, 0, 0, 0.08),
+    -6px -6px 14px rgba(255, 255, 255, 0.9);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neu-btn:hover {
+  box-shadow:
+    2px 2px 6px rgba(0, 0, 0, 0.1),
+    -2px -2px 6px rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.neu-btn:active {
+  box-shadow:
+    inset 3px 3px 8px rgba(0, 0, 0, 0.08),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.7);
+  transform: translateY(0);
+}
+
+.neu-btn.active {
+  background: var(--color-forest);
+  color: var(--color-sand);
+  box-shadow:
+    inset 3px 3px 8px rgba(0, 0, 0, 0.15),
+    inset -3px -3px 8px rgba(42, 86, 64, 0.5);
+}
+
+/* ── Primary CTA Button ── */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-forest);
+  color: var(--color-sand);
+  border: 1px solid rgba(194, 168, 120, 0.25);
+  border-radius: 60px;
+  padding: 16px 40px;
+  font-family: var(--font-family-sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(194, 168, 120, 0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.cta-btn:hover::before {
+  opacity: 1;
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(26, 54, 38, 0.35);
+  border-color: rgba(194, 168, 120, 0.5);
+}
+
+/* ── Navbar ── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 20px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar.scrolled {
+  background: rgba(245, 244, 240, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 14px 48px;
+  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Section Labels (Exploded View) ── */
+.explode-label {
+  position: absolute;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.explode-label.visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.explode-label .label-line {
+  width: 60px;
+  height: 1px;
+  background: var(--color-sand);
+  margin-bottom: 8px;
+}
+
+/* ── Configurator Panel ── */
+.config-panel {
+  background: rgba(245, 244, 240, 0.92);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-right: 1px solid rgba(194, 168, 120, 0.15);
+  box-shadow: 4px 0 40px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Scroll Indicator ── */
+@keyframes scrollBounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+.scroll-indicator {
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+
+/* ── Float Animation ── */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.float-anim {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ── Fade In Up ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ── Typography Utilities ── */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-sand) 0%, var(--color-sand-light) 50%, var(--color-sand) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-sand);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sand-dark);
+}
+
+/* ── Canvas Container ── */
+.canvas-container {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+}
+
+/* ── Content Layer ── */
+.content-layer {
+  position: relative;
+  z-index: 10;
+}
+
+/* ── Section utility ── */
+.section-full {
+  min-height: 100vh;
+  position: relative;
+}
