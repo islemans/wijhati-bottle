@@ -78,10 +78,10 @@ export default function ExplodedSection() {
                 pointerEvents: visible ? 'auto' : 'none',
               }}
             >
-              <h3 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white drop-shadow-md mb-1 md:mb-2">
+              <h3 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[#12261E] drop-shadow-md mb-1 md:mb-2">
                 {block.heading}
               </h3>
-              <p className="text-sm sm:text-base md:text-lg font-light text-gray-300">
+              <p className="text-sm sm:text-base md:text-lg font-light text-[#12261E]/80">
                 {block.subtext}
               </p>
             </div>
