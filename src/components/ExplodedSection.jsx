@@ -66,7 +66,7 @@ export default function ExplodedSection() {
           return (
             <div
               key={block.id}
-              className="absolute z-30 transition-all duration-700 ease-out"
+              className="absolute z-30 transition-all duration-700 ease-out bg-white/60 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-white/20 md:bg-transparent md:backdrop-blur-none md:border-none md:shadow-none md:p-0"
               style={{
                 top: block.top,
                 ...(block.side === 'left'
