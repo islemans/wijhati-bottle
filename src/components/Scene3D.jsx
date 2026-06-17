@@ -17,8 +17,9 @@ import BottleModel from './BottleModel';
  */
 export default function Scene3D() {
   return (
-    <div className="canvas-container">
+    <div className="fixed inset-0 top-[25vh] md:top-0 w-full h-[75vh] md:h-screen -z-10 pointer-events-none">
       <Canvas
+        className="pointer-events-auto"
         camera={{ position: [0, 0.3, 8], fov: 35 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true, toneMapping: 3 /* ACESFilmic */ }}

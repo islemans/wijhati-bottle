@@ -42,17 +42,10 @@ export function SmartCap(props) {
         <meshPhysicalMaterial {...capMaterial} />
       </mesh>
 
-      <mesh position={[0, 0.126, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.36, 160]} />
-        <meshPhysicalMaterial
-          color="#050606"
-          metalness={0.18}
-          roughness={0.48}
-          clearcoat={0.35}
-          clearcoatRoughness={0.18}
-          emissive="#06120e"
-          emissiveIntensity={0.3}
-        />
+      {/* Temperature sensor core — shiny steel cylinder */}
+      <mesh position={[0, -0.115, 0]}>
+        <cylinderGeometry args={[0.18, 0.18, 0.03, 32]} />
+        <meshPhysicalMaterial color="#c0c0c0" metalness={1} roughness={0.15} envMapIntensity={1.5} />
       </mesh>
 
       <SmartTemperatureText position={[0, 0.134, 0]} rotation={[-Math.PI / 2, 0, 0]} />
@@ -98,6 +91,13 @@ export function InoxBody(props) {
         <meshPhysicalMaterial {...inoxMaterial} />
       </mesh>
 
+      {/* Inner stainless steel wall — open tube, hyper-reflective */}
+      <mesh position={[0, 0.005, 0]} castShadow>
+        <cylinderGeometry args={[0.48, 0.48, 3.09, 160, 1, true]} />
+        <meshPhysicalMaterial color="#ffffff" metalness={1} roughness={0.05} clearcoat={1} side={2} envMapIntensity={1.8} />
+      </mesh>
+
+      {/* Gold separator rings */}
       <mesh position={[0, 1.535, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[0.505, 0.505, 0.018, 160, 1]} />
         <meshStandardMaterial color="#D4AF37" metalness={1} roughness={0.2} />
@@ -109,37 +109,27 @@ export function InoxBody(props) {
       </mesh>
 
       <Text
-        position={[0, 0.15, 0.51]}
-        fontSize={0.18}
-        letterSpacing={0.04}
-        anchorX="center"
-        anchorY="middle"
-        color={GOLD}
-      >
-        Wijhati
-        <meshPhysicalMaterial {...goldMaterial} />
-      </Text>
-
-      <Text
         position={[0, -1.04, 0.506]}
         fontSize={0.22}
         anchorX="center"
         anchorY="middle"
-        color={GOLD}
+        color="#D4AF37"
       >
         W
-        <meshPhysicalMaterial {...goldMaterial} />
+        <meshPhysicalMaterial color="#D4AF37" metalness={0.78} roughness={0.24} clearcoat={0.18} clearcoatRoughness={0.3} envMapIntensity={1.15} />
       </Text>
 
       <Text
-        position={[0, -1.2, 0.506]}
-        fontSize={0.08}
+        position={[0, -1.2, 0.51]}
+        fontSize={0.12}
+        letterSpacing={0.06}
         anchorX="center"
         anchorY="middle"
-        color={GOLD}
+        color="#D4AF37"
+        rotation={[0, 0, 0]}
       >
         Wijhati
-        <meshPhysicalMaterial {...goldMaterial} />
+        <meshPhysicalMaterial color="#D4AF37" metalness={0.78} roughness={0.24} clearcoat={0.18} clearcoatRoughness={0.3} envMapIntensity={1.15} />
       </Text>
     </group>
   );
@@ -148,8 +138,15 @@ export function InoxBody(props) {
 export function SmartStorageBase(props) {
   return (
     <group {...props}>
+      {/* Wall — open-ended cylinder so interior is a visible cavity */}
       <mesh castShadow receiveShadow>
-        <cylinderGeometry args={[0.505, 0.505, 0.34, 160, 1]} />
+        <cylinderGeometry args={[0.505, 0.505, 0.34, 64, 1, true]} />
+        <meshPhysicalMaterial {...inoxMaterial} side={2} />
+      </mesh>
+
+      {/* Floor — solid disc at the bottom of the wall */}
+      <mesh position={[0, -0.17, 0]} castShadow>
+        <cylinderGeometry args={[0.505, 0.505, 0.02, 64]} />
         <meshPhysicalMaterial {...inoxMaterial} />
       </mesh>
     </group>

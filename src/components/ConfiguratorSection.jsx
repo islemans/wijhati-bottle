@@ -40,7 +40,7 @@ export default function ConfiguratorSection() {
   return (
     <section
       id="configure"
-      className="section-full relative flex items-center overflow-hidden py-24 font-sans antialiased"
+      className="section-full relative flex items-center overflow-hidden py-12 md:py-24 font-sans antialiased"
       style={{ pointerEvents: 'auto' }}
     >
       <div
@@ -60,23 +60,23 @@ export default function ConfiguratorSection() {
           <p className="mb-5 text-xs font-light uppercase tracking-[0.34em] text-gray-400">
             Final Engineering Specification
           </p>
-          <h2 className="text-4xl font-semibold leading-tight tracking-tight text-white md:text-6xl">
+          <h2 className="text-2xl sm:text-3xl md:text-6xl font-semibold leading-tight tracking-tight text-white">
             Designed for the journey.
             <span className="block font-light text-gray-300">Built for the field.</span>
           </h2>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-2">
+        <div className="mt-10 md:mt-16 grid grid-cols-1 gap-8 md:gap-12 md:grid-cols-2">
           {FINAL_FEATURES.map((feature, index) => (
             <article
               key={feature.title}
               className="animate-fade-in-up max-w-xl border-t border-white/10 pt-6"
               style={{ animationDelay: `${index * 110}ms` }}
             >
-              <h3 className="text-xl font-semibold tracking-wide text-white mb-2 drop-shadow-md">
+              <h3 className="text-lg sm:text-xl font-semibold tracking-wide text-white mb-1 md:mb-2 drop-shadow-md">
                 {feature.title}
               </h3>
-              <p className="text-base font-light leading-relaxed text-gray-300">
+              <p className="text-sm sm:text-base font-light leading-relaxed text-gray-300">
                 {feature.text}
               </p>
             </article>
