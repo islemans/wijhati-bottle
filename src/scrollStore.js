@@ -7,6 +7,8 @@ const scrollStore = {
   explodeProgress: 0,
   /** Which major section is active */
   activeSection: 'hero', // 'hero' | 'exploded' | 'configurator'
+  /** 0-1 progress through the final specs reveal */
+  finalProgress: 0,
   /** Normalised mouse position (-1 to 1) for hero parallax */
   mouseX: 0,
   mouseY: 0,

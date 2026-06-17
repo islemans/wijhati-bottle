@@ -1,195 +1,149 @@
-import React, { Suspense, useState, useRef } from 'react';
+import React, { Suspense, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
-  Environment,
   ContactShadows,
+  Environment,
   OrbitControls,
+  SpotLight,
 } from '@react-three/drei';
 import BottleModel from './BottleModel';
+import SceneErrorBoundary from './SceneErrorBoundary';
 
-const MODES = [
-  { id: 'default', label: 'Everyday', icon: '☕' },
-  { id: 'gym', label: 'Gym', icon: '💪' },
-  { id: 'survival', label: 'Survival', icon: '🧭' },
-  { id: 'explorer', label: 'Explorer', icon: '🗝️' },
+const FEATURE_CALLOUTS = [
+  {
+    title: 'Smart Touch Display',
+    text: "Instantly know your water's temperature with a single tap.",
+    className: 'left-6 top-[18%] md:left-16 xl:left-24',
+  },
+  {
+    title: 'Premium Stainless Steel',
+    text: 'Double-wall vacuum insulation keeps drinks icy cold or piping hot for 24 hours.',
+    className: 'right-6 top-[44%] md:right-16 xl:right-24',
+  },
+  {
+    title: 'Phygital Integration',
+    text: 'Your physical companion, connected to your digital journey.',
+    className: 'left-6 bottom-[16%] md:left-16 xl:left-24',
+  },
 ];
 
 export default function BottleViewer({ onBack }) {
-  const [configMode, setConfigMode] = useState('default');
   const [autoRotate, setAutoRotate] = useState(true);
   const controlsRef = useRef();
 
   return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 9999,
-      background: 'var(--color-cream)',
-    }}>
-      <Canvas
-        camera={{ position: [0, 0.3, 6], fov: 30 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true, toneMapping: 3 }}
-        style={{ background: 'transparent' }}
-        shadows
-      >
-        <Suspense fallback={null}>
-          <ambientLight intensity={0.6} color="#f5efe6" />
-          <directionalLight
-            position={[10, 10, 5]} intensity={1.8} color="#fff8ee"
-            castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024}
-          />
-          <directionalLight position={[-6, 4, -4]} intensity={0.7} color="#c2d4ff" />
-          <pointLight position={[0, 4, -6]} intensity={1.2} color="#C2A878" />
-          <pointLight position={[0, -3, 3]} intensity={0.4} color="#f5efe6" />
-          <Environment preset="warehouse" environmentIntensity={0.6} />
-          <ContactShadows
-            position={[0, -2.6, 0]} opacity={0.4} scale={10}
-            blur={2} far={4} color="#1A3626"
-          />
-          <BottleModel configMode={configMode} />
-          <OrbitControls
-            ref={controlsRef}
-            enablePan={false}
-            enableZoom={true}
-            minDistance={2.5}
-            maxDistance={12}
-            minPolarAngle={-Math.PI / 2}
-            maxPolarAngle={Math.PI / 2}
-            autoRotate={autoRotate}
-            autoRotateSpeed={4}
-            enableDamping
-            dampingFactor={0.08}
-          />
-        </Suspense>
-      </Canvas>
+    <div className="fixed inset-0 z-[9999] overflow-hidden bg-[#050505]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(255,255,255,0.16),rgba(5,5,5,0)_34%),linear-gradient(180deg,#0b0b0c_0%,#050505_100%)]" />
+
+      <SceneErrorBoundary>
+        <Canvas
+          camera={{ position: [0, 0.36, 6], fov: 30 }}
+          dpr={[1, 2]}
+          gl={{ antialias: true, alpha: true, toneMapping: 3 }}
+          className="relative z-0"
+          shadows
+        >
+          <Suspense fallback={null}>
+            <ambientLight intensity={0.24} color="#ffffff" />
+            <directionalLight
+              position={[5, 7, 5]}
+              intensity={1.45}
+              color="#fff6ea"
+              castShadow
+              shadow-mapSize-width={1024}
+              shadow-mapSize-height={1024}
+            />
+            <directionalLight position={[-5, 2, 4]} intensity={0.9} color="#dbe8ff" />
+            <SpotLight
+              position={[0, 4.2, -4.8]}
+              angle={0.48}
+              penumbra={0.72}
+              intensity={4.4}
+              distance={9}
+              color="#ffffff"
+              castShadow
+            />
+            <pointLight position={[0, 3.8, -4]} intensity={1.8} color="#ffffff" distance={10} decay={2} />
+            <pointLight position={[2.8, 0.8, 2]} intensity={0.7} color="#7dffcf" distance={7} decay={2} />
+            <Environment preset="city" environmentIntensity={1.2} />
+            <ContactShadows
+              position={[0, -2.62, 0]}
+              opacity={0.48}
+              scale={8}
+              blur={2.8}
+              far={4}
+              color="#000000"
+            />
+            <BottleModel />
+            <OrbitControls
+              ref={controlsRef}
+              enablePan={false}
+              enableZoom
+              minDistance={2.5}
+              maxDistance={12}
+              minPolarAngle={-Math.PI / 2}
+              maxPolarAngle={Math.PI / 2}
+              autoRotate={autoRotate}
+              autoRotateSpeed={2.2}
+              enableDamping
+              dampingFactor={0.08}
+            />
+          </Suspense>
+        </Canvas>
+      </SceneErrorBoundary>
 
       <div className="grain-overlay" />
 
-      {/* Top bar */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10,
-        padding: '20px 32px',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-      }}>
+      <div className="pointer-events-none absolute inset-0 z-10 hidden md:block">
+        {FEATURE_CALLOUTS.map((feature, index) => (
+          <div
+            key={feature.title}
+            className={`animate-premium-fade absolute flex max-w-[330px] flex-col gap-3 text-white/90 ${feature.className}`}
+            style={{
+              animationDelay: `${180 + index * 140}ms`,
+              textShadow: '0 2px 18px rgba(0,0,0,0.42)',
+            }}
+          >
+            <p
+              className="text-2xl font-normal leading-tight tracking-wide text-white/90"
+              style={{ fontFamily: 'var(--font-family-serif)' }}
+            >
+              {feature.title}
+            </p>
+            <p className="font-sans text-sm font-light leading-6 tracking-wide text-white/58">
+              {feature.text}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="absolute left-0 right-0 top-0 z-20 flex items-center justify-between px-6 py-6 md:px-10">
         <button
           onClick={onBack}
-          style={{
-            background: 'rgba(245,244,240,0.85)',
-            backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(194,168,120,0.15)',
-            borderRadius: '60px',
-            padding: '10px 24px',
-            cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: '8px',
-            fontFamily: 'var(--font-family-sans)',
-            fontWeight: 600, fontSize: '0.85rem',
-            color: 'var(--color-forest)',
-            transition: 'all 0.3s',
-          }}
-          onMouseEnter={(e) => { e.target.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)'; }}
-          onMouseLeave={(e) => { e.target.style.boxShadow = 'none'; }}
+          className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 font-sans text-xs font-light uppercase tracking-[0.22em] text-white/80 backdrop-blur-sm transition hover:bg-white/10 hover:text-white"
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M13 8H3M3 8L7 4M3 8L7 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <path d="M13 8H3M3 8L7 4M3 8L7 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           Back
         </button>
 
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: '12px',
-          background: 'rgba(245,244,240,0.85)',
-          backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(194,168,120,0.15)',
-          borderRadius: '60px',
-          padding: '6px 6px 6px 20px',
-        }}>
-          <span style={{
-            fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.06em',
-            textTransform: 'uppercase', color: 'var(--color-forest)',
-            opacity: 0.5,
-          }}>
-            Auto-Rotate
-          </span>
+        <div className="flex items-center gap-4 rounded-full border border-white/10 bg-white/5 py-2 pl-5 pr-2 font-sans text-white/70 backdrop-blur-sm">
+          <span className="text-[0.68rem] font-light uppercase tracking-[0.24em]">Auto</span>
           <button
-            onClick={() => setAutoRotate(!autoRotate)}
-            style={{
-              width: '40px', height: '24px', borderRadius: '12px',
-              border: 'none', cursor: 'pointer', position: 'relative',
-              transition: 'background 0.3s',
-              background: autoRotate ? 'var(--color-forest)' : 'rgba(0,0,0,0.12)',
-            }}
+            onClick={() => setAutoRotate((value) => !value)}
+            aria-label="Toggle auto-rotate"
+            className={`relative h-6 w-10 rounded-full transition ${autoRotate ? 'bg-white/80' : 'bg-white/15'}`}
           >
-            <div style={{
-              width: '18px', height: '18px', borderRadius: '50%',
-              background: 'white', position: 'absolute', top: '3px',
-              transition: 'left 0.3s',
-              left: autoRotate ? '19px' : '3px',
-              boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
-            }} />
+            <span
+              className={`absolute top-1 h-4 w-4 rounded-full bg-black transition ${autoRotate ? 'left-5' : 'left-1'}`}
+            />
           </button>
         </div>
       </div>
 
-      {/* Bottom: configurator */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10,
-        padding: '32px',
-        display: 'flex', justifyContent: 'center',
-      }}>
-        <div style={{
-          display: 'flex', gap: '8px',
-          background: 'rgba(245,244,240,0.85)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(194,168,120,0.15)',
-          borderRadius: '16px',
-          padding: '8px',
-          boxShadow: '0 8px 40px rgba(0,0,0,0.06)',
-        }}>
-          {MODES.map((mode) => {
-            const active = configMode === mode.id;
-            return (
-              <button
-                key={mode.id}
-                onClick={() => setConfigMode(mode.id)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '8px',
-                  padding: '10px 18px',
-                  borderRadius: '10px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontFamily: 'var(--font-family-sans)',
-                  fontWeight: 600, fontSize: '0.8rem',
-                  color: active ? 'var(--color-cream)' : 'var(--color-forest)',
-                  background: active ? 'var(--color-forest)' : 'transparent',
-                  transition: 'all 0.3s cubic-bezier(0.4,0,0.2,1)',
-                }}
-                onMouseEnter={(e) => {
-                  if (!active) {
-                    e.target.style.background = 'rgba(26,54,38,0.06)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!active) {
-                    e.target.style.background = 'transparent';
-                  }
-                }}
-              >
-                <span style={{ fontSize: '1.1rem' }}>{mode.icon}</span>
-                {mode.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Hint */}
-      <div style={{
-        position: 'absolute', bottom: '100px', left: '50%', transform: 'translateX(-50%)',
-        zIndex: 10, textAlign: 'center',
-        fontSize: '0.7rem', fontWeight: 500, letterSpacing: '0.08em',
-        textTransform: 'uppercase', color: 'var(--color-forest)',
-        opacity: 0.3, pointerEvents: 'none',
-      }}>
-        {autoRotate ? 'Drag to orbit · Scroll to zoom' : 'Drag to orbit · Scroll to zoom'}
+      <div className="animate-premium-fade pointer-events-none absolute bottom-8 left-1/2 z-20 -translate-x-1/2 font-sans text-[0.68rem] font-light uppercase tracking-[0.28em] text-white/35">
+        Drag to orbit - Scroll to zoom
       </div>
     </div>
   );

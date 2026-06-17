@@ -5,6 +5,7 @@ import {
   ContactShadows,
   Center,
   PresentationControls,
+  SpotLight,
 } from '@react-three/drei';
 import BottleModel from './BottleModel';
 
@@ -28,12 +29,12 @@ export default function Scene3D() {
           {/* ─── Lighting Rig ─── */}
 
           {/* Soft ambient fill — warm to complement the forest green */}
-          <ambientLight intensity={0.6} color="#f5efe6" />
+          <ambientLight intensity={0.28} color="#ffffff" />
 
           {/* Key light — strong warm directional from upper-right */}
           <directionalLight
             position={[10, 10, 5]}
-            intensity={1.8}
+            intensity={1.45}
             color="#fff8ee"
             castShadow
             shadow-mapSize-width={1024}
@@ -48,15 +49,25 @@ export default function Scene3D() {
           {/* Fill light — cooler blue from the left to add dimension */}
           <directionalLight
             position={[-6, 4, -4]}
-            intensity={0.7}
+            intensity={0.82}
             color="#c2d4ff"
+          />
+
+          <SpotLight
+            position={[0, 4.5, -5.2]}
+            angle={0.46}
+            penumbra={0.7}
+            intensity={4.2}
+            distance={9}
+            color="#ffffff"
+            castShadow
           />
 
           {/* Rim / accent light — warm gold from behind */}
           <pointLight
             position={[0, 4, -6]}
-            intensity={1.2}
-            color="#C2A878"
+            intensity={1.7}
+            color="#ffffff"
             distance={20}
             decay={2}
           />
@@ -64,15 +75,15 @@ export default function Scene3D() {
           {/* Low fill to lighten the shadows underneath */}
           <pointLight
             position={[0, -3, 3]}
-            intensity={0.4}
-            color="#f5efe6"
+            intensity={0.28}
+            color="#7dffcf"
             distance={12}
             decay={2}
           />
 
           {/* ─── Environment Map for Realistic Reflections ─── */}
           {/* "warehouse" gives great metallic reflections on stainless steel */}
-          <Environment preset="warehouse" environmentIntensity={0.6} />
+          <Environment preset="city" environmentIntensity={1.2} />
 
           {/* ─── Contact Shadow — grounds the bottle visually ─── */}
           <ContactShadows

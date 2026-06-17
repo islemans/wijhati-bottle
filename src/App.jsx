@@ -9,6 +9,7 @@ import ExplodedSection from './components/ExplodedSection';
 import ConfiguratorSection from './components/ConfiguratorSection';
 import Footer from './components/Footer';
 import BottleViewer from './components/BottleViewer';
+import SceneErrorBoundary from './components/SceneErrorBoundary';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -48,6 +49,10 @@ export default function App() {
       trigger: '#configure',
       start: 'top 60%',
       end: 'bottom top',
+      scrub: 0.5,
+      onUpdate: (self) => {
+        scrollStore.finalProgress = self.progress;
+      },
       onEnter: () => { scrollStore.activeSection = 'configurator'; },
       onEnterBack: () => { scrollStore.activeSection = 'configurator'; },
       onLeaveBack: () => { scrollStore.activeSection = 'exploded'; },
@@ -66,7 +71,9 @@ export default function App() {
       ) : (
         <>
           {/* Fixed 3D Scene */}
-          <Scene3D />
+          <SceneErrorBoundary>
+            <Scene3D />
+          </SceneErrorBoundary>
 
           {/* Grain texture overlay */}
           <div className="grain-overlay" />
